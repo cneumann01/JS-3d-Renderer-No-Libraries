@@ -21,4 +21,15 @@ class Renderer {
 		this.ctx.fillStyle = color;
 		this.ctx.fill();
 	}
+
+	drawSquare(p1, p2, color = "red") {
+		console.log("Drawing Square", p1, p2);
+		const topLeft = p1;
+		const topRight = new Vector3(p2.x, p1.y);
+		const bottomLeft = new Vector3(p1.x, p2.y);
+		const bottomRight = p2;
+
+		this.drawTriangle(topLeft, topRight, bottomLeft, color);
+		this.drawTriangle(topRight, bottomLeft, bottomRight, color);
+	}
 }
