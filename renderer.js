@@ -1,5 +1,8 @@
+// Note: v# will always refer to the #th 3D vector (Vector3)
+// p# will always refer to the #th 2D projected point (Point2)
+
 class Renderer {
-	constructor(canvas, focalLength = 100) {
+	constructor(canvas, focalLength = 60) {
 		this.canvas = canvas;
 		this.ctx = canvas.getContext("2d");
 		this.width = canvas.width;
@@ -7,12 +10,17 @@ class Renderer {
 		this.focalLength = focalLength;
 	}
 
+	resize(width, height) {
+		this.width = width;
+		this.height = height;
+	}
+
 	clear() {
 		this.ctx.clearRect(0, 0, this.width, this.height);
 	}
 
-	project(Vector3) {
-		const { x, y, z } = Vector3;
+	project(v1) {
+		const { x, y, z } = v1;
 		if (z <= 0) return null; // Point behind or in the camera
 
 		const f = this.focalLength;
@@ -22,20 +30,29 @@ class Renderer {
 		const canvasX = screenX + this.width / 2;
 		const canvasY = screenY + this.height / 2;
 
-		return { x: canvasX, y: canvasY };
+		return new Point2(canvasX, canvasY);
 	}
 
-	drawPoint(Vector3, color = "green") {
-		const { x, y, z } = Vector3;
+	drawPoint(v1, radius, color = "green") {
+		const p1 = this.project(v1);
+		if (!p1) return;
+
+		const scaledRadius = (radius * this.focalLength) / v1.z;
+
 		this.ctx.beginPath();
-		this.ctx.arc(500, 500, 20, 0, Math.PI * 2);
+		this.ctx.arc(p1.x, p1.y, scaledRadius, 0, Math.PI * 2);
 		this.ctx.strokeStyle = color;
 		this.ctx.stroke();
 		this.ctx.fillStyle = color;
 		this.ctx.fill();
 	}
 
-	drawTriangle(p1, p2, p3, color = "blue") {
+	drawTriangle(v1, v2, v3, color = "blue") {
+		const p1 = this.project(v1);
+		const p2 = this.project(v2);
+		const p3 = this.project(v3);
+		if (!p1 || !p2 || !p3) return;
+
 		this.ctx.beginPath();
 		this.ctx.moveTo(p1.x, p1.y);
 		this.ctx.lineTo(p2.x, p2.y);
@@ -45,15 +62,14 @@ class Renderer {
 		this.ctx.stroke();
 		this.ctx.fillStyle = color;
 		this.ctx.fill();
+
+		this.drawPoint(v1, 1, "black");
+		this.drawPoint(v2, 1, "black");
+		this.drawPoint(v3, 1, "black");
 	}
 
-	drawSquare(p1, p2, color = "red") {
-		const topLeft = p1;
-		const topRight = new Vector3(p2.x, p1.y);
-		const bottomLeft = new Vector3(p1.x, p2.y);
-		const bottomRight = p2;
-
-		this.drawTriangle(topLeft, topRight, bottomLeft, color);
-		this.drawTriangle(topRight, bottomLeft, bottomRight, color);
+	drawSquare(v1, v2, v3, v4, color = "red") {
+		this.drawTriangle(v1, v2, v3, color);
+		this.drawTriangle(v2, v3, v4, color);
 	}
 }

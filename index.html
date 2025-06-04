@@ -6,9 +6,29 @@
 		<title>JS-3D-Renderer</title>
 	</head>
 	<body>
-		<canvas id="myCanvas"></canvas>
+		<div id="canvasContainer">
+			<canvas id="myCanvas"></canvas>
+			<div id="overlayContainer">
+				<div class="control">
+					<label for="fovSlider"
+						>FOV: <span id="fovValue">60</span></label
+					>
+					<input
+						type="range"
+						id="fovSlider"
+						min="1"
+						max="1000"
+						value="60" />
+				</div>
+			</div>
+		</div>
+
 		<link rel="stylesheet" href="style.css" />
+
+		<script src="point2.js"></script>
 		<script src="vector3.js"></script>
+
+		<script src="overlay.js"></script>
 		<script src="renderer.js"></script>
 		<script src="main.js"></script>
 	</body>
