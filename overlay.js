@@ -8,7 +8,6 @@ class Overlay {
 			const fov = Number(this.fovSlider.value);
 			this.renderer.focalLength = fov;
 			this.fovValueLabel.textContent = fov;
-			renderCallback();
 		});
 	}
 }
