@@ -6,6 +6,9 @@ class MeshFactory {
 			center = new Vector3(0, 0, 10);
 		}
 
+		// Attempt to fix Z-fighting: push face slightly outward
+		center = center.add(normal.scale(0.01));
+
 		color = color || Utils.getRandomColor();
 
 		let right;
@@ -35,11 +38,45 @@ class MeshFactory {
 		return new Mesh([tri1, tri2]);
 	}
 
-	static generateCube(center, size, color) {
+	static generateCube(size, center, color) {
 		if (!center) {
 			center = new Vector3(0, 0, 10);
 		}
 
-		const leftFace = center - size / 2;
+		const halfS = size / 2;
+
+		const faces = [
+			{
+				normal: new Vector3(-1, 0, 0),
+				offset: new Vector3(-halfS, 0, 0),
+			}, // Left
+			{ normal: new Vector3(1, 0, 0), offset: new Vector3(halfS, 0, 0) }, // Right
+			{ normal: new Vector3(0, 1, 0), offset: new Vector3(0, halfS, 0) }, // Top
+			{
+				normal: new Vector3(0, -1, 0),
+				offset: new Vector3(0, -halfS, 0),
+			}, // Bottom
+			{ normal: new Vector3(0, 0, 1), offset: new Vector3(0, 0, halfS) }, // Front
+			{
+				normal: new Vector3(0, 0, -1),
+				offset: new Vector3(0, 0, -halfS),
+			}, // Back
+		];
+
+		const triangles = [];
+
+		for (const face of faces) {
+			const faceCenter = center.add(face.offset);
+			const faceMesh = this.generateQuad(
+				size,
+				size,
+				face.normal,
+				faceCenter,
+				color
+			);
+			triangles.push(...faceMesh.triangles);
+		}
+
+		return new Mesh(triangles);
 	}
 }

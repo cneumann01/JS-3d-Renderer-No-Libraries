@@ -18,12 +18,13 @@ window.addEventListener("resize", resizeCanvas);
 
 // -------------------------------------------------------------------
 const mesh1 = MeshFactory.generateQuad(
-	10,
-	10,
+	30,
+	30,
 	new Vector3(0, 0, 10),
-	new Vector3(0, 0, 10),
-	"red"
+	new Vector3(0, -30, 50)
 );
+
+const mesh2 = MeshFactory.generateCube(30, new Vector3(0, 30, 50));
 
 let angle = 0;
 
@@ -37,13 +38,14 @@ function render() {
 }
 
 function updateScene() {
-	angle += Math.PI / 180;
+	angle += Math.PI / 360;
 }
 
 function drawScene() {
 	renderer.clear();
 
-	const rotatedMesh = mesh1.rotateY(angle);
+	const rotatedMesh1 = mesh1.rotateX(angle).rotateZ(angle);
+	const rotatedMesh2 = mesh2.rotateY(-angle).rotateZ(-angle);
 
-	renderer.drawMesh(rotatedMesh);
+	renderer.renderScene([rotatedMesh1, rotatedMesh2]);
 }

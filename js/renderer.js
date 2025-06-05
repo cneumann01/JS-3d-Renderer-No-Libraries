@@ -69,4 +69,18 @@ class Renderer {
 	drawMesh(mesh) {
 		mesh.triangles.forEach((tri) => this.drawTriangle(tri));
 	}
+
+	renderScene(meshes) {
+		// Flatten all triangles across all meshes
+		let allTriangles = meshes.flatMap((mesh) => mesh.triangles);
+
+		// Sort triangles by average Z-depth (far to near)
+		allTriangles.sort((a, b) => {
+			const aZ = (a.v1.z + a.v2.z + a.v3.z) / 3;
+			const bZ = (b.v1.z + b.v2.z + b.v3.z) / 3;
+			return bZ - aZ;
+		});
+		// Draw sorted triangles
+		allTriangles.forEach((tri) => this.drawTriangle(tri));
+	}
 }
