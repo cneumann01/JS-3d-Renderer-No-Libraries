@@ -47,7 +47,7 @@ class Renderer {
 		this.ctx.fill();
 	}
 
-	drawTriangle(triangle, color) {
+	drawTriangle(triangle) {
 		const p1 = this.project(triangle.v1);
 		const p2 = this.project(triangle.v2);
 		const p3 = this.project(triangle.v3);
@@ -58,18 +58,15 @@ class Renderer {
 		this.ctx.lineTo(p2.x, p2.y);
 		this.ctx.lineTo(p3.x, p3.y);
 		this.ctx.closePath();
-		this.ctx.strokeStyle = triangle.color || color;
+
+		const randomColor = Utils.getRandomColor();
+		this.ctx.strokeStyle = triangle.color || randomColor;
 		this.ctx.stroke();
-		this.ctx.fillStyle = triangle.color || color;
+		this.ctx.fillStyle = triangle.color || randomColor;
 		this.ctx.fill();
 	}
 
 	drawMesh(mesh) {
 		mesh.triangles.forEach((tri) => this.drawTriangle(tri));
-	}
-
-	drawSquare(v1, v2, v3, v4, color) {
-		this.drawTriangle(v1, v2, v3, color);
-		this.drawTriangle(v2, v3, v4, color);
 	}
 }

@@ -13,6 +13,24 @@ class Vector3 {
 		return new Vector3(this.x - v.x, this.y - v.y, this.z - v.z);
 	}
 
+	scale(scalar) {
+		return new Vector3(this.x * scalar, this.y * scalar, this.z * scalar);
+	}
+
+	normalize() {
+		const length = Math.sqrt(this.x ** 2 + this.y ** 2 + this.z ** 2);
+		if (length === 0) return new Vector3(0, 0, 0);
+		return new Vector3(this.x / length, this.y / length, this.z / length);
+	}
+
+	cross(v) {
+		return new Vector3(
+			this.y * v.z - this.z * v.y,
+			this.z * v.x - this.x * v.z,
+			this.x * v.y - this.y * v.x
+		);
+	}
+
 	rotateX(angle) {
 		const cos = Math.cos(angle);
 		const sin = Math.sin(angle);
