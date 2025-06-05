@@ -1,5 +1,5 @@
 class Triangle {
-	constructor(v1, v2, v3, color = "yellow") {
+	constructor(v1, v2, v3, color) {
 		this.v1 = v1;
 		this.v2 = v2;
 		this.v3 = v3;
@@ -14,16 +14,20 @@ class Triangle {
 		);
 	}
 
-	rotateX(angle, center = this.getCenter()) {
+	rotateX(angle, center) {
+		if (!center) center = this.getCenter();
+
 		return new Triangle(
-            this.v2.subtract(center).rotateX(angle).add(center),
+			this.v2.subtract(center).rotateX(angle).add(center),
 			this.v3.subtract(center).rotateX(angle).add(center),
 			this.v1.subtract(center).rotateX(angle).add(center),
 			this.color
 		);
 	}
 
-	rotateY(angle, center = this.getCenter()) {
+	rotateY(angle, center) {
+		if (!center) center = this.getCenter();
+
 		return new Triangle(
 			this.v1.subtract(center).rotateY(angle).add(center),
 			this.v2.subtract(center).rotateY(angle).add(center),
@@ -32,7 +36,9 @@ class Triangle {
 		);
 	}
 
-	rotateZ(angle, center = this.getCenter()) {
+	rotateZ(angle, center) {
+		if (!center) center = this.getCenter();
+
 		return new Triangle(
 			this.v1.subtract(center).rotateZ(angle).add(center),
 			this.v2.subtract(center).rotateZ(angle).add(center),
