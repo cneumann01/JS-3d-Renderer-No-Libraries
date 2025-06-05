@@ -47,10 +47,10 @@ class Renderer {
 		this.ctx.fill();
 	}
 
-	drawTriangle(v1, v2, v3, color = "blue") {
-		const p1 = this.project(v1);
-		const p2 = this.project(v2);
-		const p3 = this.project(v3);
+	drawTriangle(triangle, color = "blue") {
+		const p1 = this.project(triangle.v1);
+		const p2 = this.project(triangle.v2);
+		const p3 = this.project(triangle.v3);
 		if (!p1 || !p2 || !p3) return;
 
 		this.ctx.beginPath();
@@ -62,10 +62,6 @@ class Renderer {
 		this.ctx.stroke();
 		this.ctx.fillStyle = color;
 		this.ctx.fill();
-
-		this.drawPoint(v1, 1, "black");
-		this.drawPoint(v2, 1, "black");
-		this.drawPoint(v3, 1, "black");
 	}
 
 	drawSquare(v1, v2, v3, v4, color = "red") {

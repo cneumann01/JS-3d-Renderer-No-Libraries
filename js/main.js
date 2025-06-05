@@ -17,10 +17,11 @@ resizeCanvas();
 window.addEventListener("resize", resizeCanvas);
 
 // -------------------------------------------------------------------
-const v1 = new Vector3(-10, -10, 10);
-const v2 = new Vector3(10, -10, 30);
-const v3 = new Vector3(0, 10, 30);
-const center = new Vector3(0, 0, 30);
+const v1 = new Vector3(-10, -10, 20);
+const v2 = new Vector3(10, -10, 20);
+const v3 = new Vector3(0, 10, 20);
+const t1 = new Triangle(v1, v2, v3);
+
 let angle = 0;
 
 render();
@@ -39,9 +40,7 @@ function updateScene() {
 function drawScene() {
 	renderer.clear();
 
-	const rotated1 = v1.subtract(center).rotateY(angle).add(center);
-	const rotated2 = v2.subtract(center).rotateY(angle).add(center);
-	const rotated3 = v3.subtract(center).rotateY(angle).add(center);
+	const rotatedt1 = t1.rotateX(angle).rotateY(angle).rotateZ(angle);
 
-	renderer.drawTriangle(rotated1, rotated2, rotated3, "green");
+	renderer.drawTriangle(rotatedt1, "green");
 }
