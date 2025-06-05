@@ -17,16 +17,13 @@ resizeCanvas();
 window.addEventListener("resize", resizeCanvas);
 
 // -------------------------------------------------------------------
-const v1 = new Vector3(-10, -10, 20);
-const v2 = new Vector3(10, -10, 20);
-const v3 = new Vector3(0, 10, 20);
-const t1 = new Triangle(v1, v2, v3, "orange");
-
-const v4 = new Vector3(-10, 50, 50);
-const v5 = new Vector3(10, 50, 50);
-const v6 = new Vector3(0, 70, 50);
-const t2 = new Triangle(v4, v5, v6, "red");
-const mesh1 = new Mesh([t1, t2]);
+const mesh1 = MeshFactory.generateQuad(
+	10,
+	10,
+	new Vector3(0, 0, 10),
+	new Vector3(0, 0, 10),
+	"red"
+);
 
 let angle = 0;
 
