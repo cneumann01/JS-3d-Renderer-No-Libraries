@@ -7,10 +7,9 @@ class MeshFactory {
 		}
 
 		// Attempt to fix Z-fighting: push face slightly outward
-		center = center.add(normal.scale(0.01));
+		// center = center.add(normal.scale(0.1));
 
 		color = color || Utils.getRandomColor();
-
 		let right;
 		if (Math.abs(normal.y) < 0.999) {
 			right = normal.cross(new Vector3(0, 1, 0)).normalize();
@@ -65,14 +64,23 @@ class MeshFactory {
 
 		const triangles = [];
 
-		for (const face of faces) {
+		const debugColors = [
+			"red",
+			"green",
+			"blue",
+			"yellow",
+			"cyan",
+			"magenta",
+		];
+		for (let i = 0; i < faces.length; i++) {
+			const face = faces[i];
 			const faceCenter = center.add(face.offset);
 			const faceMesh = this.generateQuad(
 				size,
 				size,
 				face.normal,
 				faceCenter,
-				color
+				debugColors[i]
 			);
 			triangles.push(...faceMesh.triangles);
 		}

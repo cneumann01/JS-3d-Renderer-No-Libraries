@@ -2,12 +2,17 @@
 // p# will always refer to the #th 2D projected point (Point2)
 
 class Renderer {
-	constructor(canvas, focalLength = 60) {
+	constructor(canvas) {
 		this.canvas = canvas;
 		this.ctx = canvas.getContext("2d");
 		this.width = canvas.width;
 		this.height = canvas.height;
-		this.focalLength = focalLength;
+
+		// Defaults
+		this.settings = {
+			focalLength: 60,
+			speed: 100,
+		};
 	}
 
 	resize(width, height) {
@@ -23,7 +28,7 @@ class Renderer {
 		const { x, y, z } = v1;
 		if (z <= 0) return null; // Point behind or in the camera
 
-		const f = this.focalLength;
+		const f = this.settings["focalLength"];
 		const screenX = (f * x) / z;
 		const screenY = (f * y) / z;
 
@@ -33,11 +38,12 @@ class Renderer {
 		return new Point2(canvasX, canvasY);
 	}
 
-	drawPoint(v1, radius, color) {
+	drawPoint(v1, radius, color = "black") {
 		const p1 = this.project(v1);
 		if (!p1) return;
 
-		const scaledRadius = (radius * this.focalLength) / v1.z;
+		const focalLength = this.settings["focalLength"];
+		const scaledRadius = (radius * focalLength) / v1.z;
 
 		this.ctx.beginPath();
 		this.ctx.arc(p1.x, p1.y, scaledRadius, 0, Math.PI * 2);
@@ -48,6 +54,10 @@ class Renderer {
 	}
 
 	drawTriangle(triangle) {
+		this.drawPoint(triangle.v1, 1);
+		this.drawPoint(triangle.v2, 1);
+		this.drawPoint(triangle.v3, 1);
+
 		const p1 = this.project(triangle.v1);
 		const p2 = this.project(triangle.v2);
 		const p3 = this.project(triangle.v3);
@@ -60,7 +70,7 @@ class Renderer {
 		this.ctx.closePath();
 
 		const randomColor = Utils.getRandomColor();
-		this.ctx.strokeStyle = triangle.color || randomColor;
+		this.ctx.strokeStyle = "black";
 		this.ctx.stroke();
 		this.ctx.fillStyle = triangle.color || randomColor;
 		this.ctx.fill();
