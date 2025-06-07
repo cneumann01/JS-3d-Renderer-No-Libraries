@@ -39,9 +39,7 @@ class MeshFactory {
 	}
 
 	static generateCube(size, center, color) {
-		if (!center) {
-			center = new Vector3(0, 0, 10);
-		}
+		if (!center) center = new Vector3(0, 0, 10);
 
 		const halfS = size / 2;
 

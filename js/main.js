@@ -58,6 +58,5 @@ function drawScene() {
 		.rotateY(angle * renderer.settings["rotateY"])
 		.rotateZ(angle * renderer.settings["rotateZ"]);
 
-	// renderer.renderScene([rotatedMesh1]);
-	renderer.drawMesh(rotatedMesh1);
+	renderer.renderScene([rotatedMesh1]);
 }
