@@ -6,8 +6,8 @@ class MeshFactory {
 			center = new Vector3(0, 0, 10);
 		}
 
-		// Attempt to fix Z-fighting: push face slightly outward
-		// center = center.add(normal.scale(0.1));
+		// Attempt to fix Z-fighting by pushing face slightly outward
+		center = center.add(normal.scale(0.001));
 
 		color = color || Utils.getRandomColor();
 		let right;
@@ -31,8 +31,9 @@ class MeshFactory {
 			.add(right.scale(halfW))
 			.add(up.scale(-halfH));
 
-		const tri1 = new Triangle(topLeft, bottomLeft, topRight, color);
-		const tri2 = new Triangle(bottomRight, topRight, bottomLeft, color);
+		// Winding: counter-clockwise from the perspective of the normal
+		const tri1 = new Triangle(topLeft, topRight, bottomLeft, color);
+		const tri2 = new Triangle(bottomLeft, topRight, bottomRight, color);
 
 		return new Mesh([tri1, tri2]);
 	}

@@ -14,6 +14,12 @@ class Triangle {
 		);
 	}
 
+	getFaceNormal() {
+		const edge1 = this.v2.subtract(this.v1);
+		const edge2 = this.v3.subtract(this.v1);
+		return edge1.cross(edge2).normalize();
+	}
+
 	rotateX(angle, center) {
 		if (!center) center = this.getCenter();
 

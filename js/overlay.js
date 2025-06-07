@@ -18,7 +18,7 @@ class Overlay {
 
 		// Create label
 		const label = document.createElement("label");
-		label.innerText = `${name}: ${defaultValue}`;
+		label.innerText = `${name}: ${defaultValue} `;
 
 		// Create slider
 		const slider = document.createElement("input");
@@ -33,7 +33,7 @@ class Overlay {
 		slider.addEventListener("input", (e) => {
 			const newValue = Number(e.target.value);
 			this.renderer.settings[settingKey] = newValue;
-			label.innerText = `${name}: ${newValue}`;
+			label.innerText = `${name}: ${newValue} `;
 		});
 
 		// Updates renderer value to match initital slider starting value
