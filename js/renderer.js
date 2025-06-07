@@ -8,11 +8,17 @@ class Renderer {
 		this.width = canvas.width;
 		this.height = canvas.height;
 
+		this.camera = null;
+
 		// Defaults
 		this.settings = {
 			focalLength: 60,
 			speed: 100,
 		};
+	}
+
+	setCamera(camera) {
+		this.camera = camera;
 	}
 
 	resize(width, height) {
@@ -27,25 +33,16 @@ class Renderer {
 	}
 
 	project(v1) {
+		if (this.camera) {
+			v1 = this.camera.transform(v1);
+		}
 		const { x, y, z } = v1;
-		if (z <= 0) return null; // Point behind or in the camera
 
-		const f = this.settings["focalLength"];
-		const screenX = (f * x) / z;
-		const screenY = (f * y) / z;
-
-		const canvasX = screenX + this.width / 2;
-		const canvasY = screenY + this.height / 2;
-
-		return new Point2(canvasX, canvasY);
-	}
-
-	projectWithZ(v1) {
-		const { x, y, z } = v1;
 		if (z <= 0) return null;
 
 		const f = this.settings["focalLength"];
-		const screenX = (f * x) / z + this.width / 2;
+		const aspect = this.width / this.height;
+		const screenX = ((f * x) / z) * aspect + this.width / 2;
 		const screenY = (f * y) / z + this.height / 2;
 
 		return new Vector3(screenX, screenY, z);
@@ -106,11 +103,11 @@ class Renderer {
 
 	drawTriangle(triangle) {
 		const normal = triangle.getFaceNormal();
-		if (normal.z >= 0) return; // Backface culling
+		// if (normal.z >= 0) return; // Backface culling
 
-		const v1 = this.projectWithZ(triangle.v1);
-		const v2 = this.projectWithZ(triangle.v2);
-		const v3 = this.projectWithZ(triangle.v3);
+		const v1 = this.project(triangle.v1);
+		const v2 = this.project(triangle.v2);
+		const v3 = this.project(triangle.v3);
 
 		if (!v1 || !v2 || !v3) return;
 
@@ -161,10 +158,6 @@ class Renderer {
 	}
 
 	renderScene(meshes) {
-		for (const mesh of meshes) {
-			for (const triangle of mesh.triangles) {
-				this.drawTriangle(triangle);
-			}
-		}
+		meshes.forEach((mesh) => this.drawMesh(mesh));
 	}
 }
