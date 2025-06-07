@@ -31,6 +31,18 @@ class Vector3 {
 		);
 	}
 
+	dot(v) {
+		return this.x * v.x + this.y * v.y + this.z * v.z;
+	}
+
+	length() {
+		return Math.sqrt(this.x ** 2 + this.y ** 2 + this.z ** 2);
+	}
+
+	distanceTo(v) {
+		return this.subtract(v).length();
+	}
+
 	rotateX(angle) {
 		const cos = Math.cos(angle);
 		const sin = Math.sin(angle);

@@ -33,7 +33,7 @@ console.log(renderer);
 // -------------------------------------------------------------------
 // Main body
 
-const mesh1 = MeshFactory.generateCube(35, new Vector3(0, 0, 50));
+const mesh1 = MeshFactory.generateCube(30, new Vector3(0, 0, 50));
 
 let angle = 0;
 
