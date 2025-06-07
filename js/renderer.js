@@ -104,30 +104,6 @@ class Renderer {
 		this.ctx.stroke();
 	}
 
-	// drawTriangle(triangle) {
-	// 	const normal = triangle.getFaceNormal();
-	// 	if (normal.z >= 0) {
-	// 		return;
-	// 	}
-
-	// 	const p1 = this.project(triangle.v1);
-	// 	const p2 = this.project(triangle.v2);
-	// 	const p3 = this.project(triangle.v3);
-	// 	if (!p1 || !p2 || !p3) return;
-
-	// 	this.ctx.beginPath();
-	// 	this.ctx.moveTo(p1.x, p1.y);
-	// 	this.ctx.lineTo(p2.x, p2.y);
-	// 	this.ctx.lineTo(p3.x, p3.y);
-	// 	this.ctx.closePath();
-
-	// 	const randomColor = Utils.getRandomColor();
-	// 	this.ctx.strokeStyle = triangle.color || randomColor;
-	// 	this.ctx.stroke();
-	// 	this.ctx.fillStyle = triangle.color || randomColor;
-	// 	this.ctx.fill();
-	// }
-
 	drawTriangle(triangle) {
 		const normal = triangle.getFaceNormal();
 		if (normal.z >= 0) return; // Backface culling
