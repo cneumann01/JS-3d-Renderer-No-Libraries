@@ -1,23 +1,3 @@
-// class Camera {
-// 	constructor(position = new Vector3(0, 0, 0), yaw = 0, pitch = 0, roll = 0) {
-// 		this.position = position;
-// 		this.yaw = yaw;
-// 		this.pitch = pitch;
-// 		this.roll = roll;
-// 	}
-
-// 	transform(worldPos) {
-// 		const relative = worldPos.subtract(this.position);
-
-// 		// Apply rotation in the order: roll (Z), pitch (X), yaw (Y)
-// 		let v = relative;
-// 		v = v.rotateZ(-this.roll);
-// 		v = v.rotateX(-this.pitch);
-// 		v = v.rotateY(-this.yaw);
-// 		return v;
-// 	}
-// }
-
 class Camera {
 	constructor(position = new Vector3(0, 0, 0), yaw = 0, pitch = 0, roll = 0) {
 		this.position = position;
@@ -26,16 +6,18 @@ class Camera {
 		this.roll = roll;
 	}
 
-	// Applies inverse rotation and translation to world space point
 	transform(worldPos) {
 		const relative = worldPos.subtract(this.position);
 
-		// Apply inverse rotation: Roll → Pitch → Yaw
-		let v = relative;
-		v = v.rotateZ(-this.roll);
-		v = v.rotateX(-this.pitch);
-		v = v.rotateY(-this.yaw);
-		return v;
+		const forward = this.getForwardVector(); // includes yaw/pitch/roll
+		const right = this.getRightVector();
+		const up = this.getUpVector();
+
+		return new Vector3(
+			relative.dot(right),
+			relative.dot(up),
+			relative.dot(forward)
+		);
 	}
 
 	// -------------------------
@@ -50,31 +32,37 @@ class Camera {
 		this.roll += delta;
 	}
 
+	applyRotation(deltaYaw, deltaPitch, deltaRoll) {
+		this.yaw += deltaYaw;
+		this.pitch += deltaPitch;
+		this.roll += deltaRoll;
+	}
+
 	// -------------------------
 	// Movement vectors
+
 	getForwardVector() {
-		// Apply yaw & pitch only
-		return new Vector3(
-			Math.sin(this.yaw) * Math.cos(this.pitch),
-			Math.sin(this.pitch),
-			Math.cos(this.yaw) * Math.cos(this.pitch)
-		).normalize();
+		let v = new Vector3(0, 0, 1); // local forward
+		v = v.rotateZ(this.roll);
+		v = v.rotateX(this.pitch);
+		v = v.rotateY(this.yaw);
+		return v.normalize();
 	}
 
 	getRightVector() {
-		// Perpendicular in horizontal plane (no pitch)
-		return new Vector3(
-			Math.cos(this.yaw),
-			0,
-			-Math.sin(this.yaw)
-		).normalize();
+		let v = new Vector3(1, 0, 0); // local right
+		v = v.rotateZ(this.roll);
+		v = v.rotateX(this.pitch);
+		v = v.rotateY(this.yaw);
+		return v.normalize();
 	}
 
 	getUpVector() {
-		// Use cross product to get true "camera up" including roll
-		const forward = this.getForwardVector();
-		const right = this.getRightVector();
-		return right.cross(forward).normalize();
+		let v = new Vector3(0, 1, 0); // local up
+		v = v.rotateZ(this.roll);
+		v = v.rotateX(this.pitch);
+		v = v.rotateY(this.yaw);
+		return v.normalize();
 	}
 
 	// -------------------------

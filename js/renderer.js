@@ -43,7 +43,7 @@ class Renderer {
 		const f = this.settings["focalLength"];
 		const aspect = this.width / this.height;
 		const screenX = ((f * x) / z) * aspect + this.width / 2;
-		const screenY = (f * y) / z + this.height / 2;
+		const screenY = -(f * y) / z + this.height / 2;
 
 		return new Vector3(screenX, screenY, z);
 	}
@@ -83,14 +83,9 @@ class Renderer {
 		this.ctx.fill();
 	}
 
-	drawNormal(triangle, length = 10, color = "purple") {
-		const center = triangle.getCenter();
-		const normal = triangle.getFaceNormal();
-
-		const end = center.add(normal.scale(length));
-
-		const p1 = this.project(center);
-		const p2 = this.project(end);
+	drawLine(v1, v2, color = "black") {
+		const p1 = this.project(v1);
+		const p2 = this.project(v2);
 
 		if (!p1 || !p2) return;
 
@@ -99,6 +94,24 @@ class Renderer {
 		this.ctx.lineTo(p2.x, p2.y);
 		this.ctx.strokeStyle = color;
 		this.ctx.stroke();
+	}
+
+	drawNormal(triangle, length = 10, color = "purple") {
+		const center = triangle.getCenter();
+		const normal = triangle.getFaceNormal().normalize();
+		const end = center.add(normal.scale(length));
+
+		this.drawLine(center, end, color);
+	}
+
+	drawAxis(center = new Vector3(0, 0, 0), length = 20) {
+		const xEnd = center.add(new Vector3(length, 0, 0));
+		const yEnd = center.add(new Vector3(0, length, 0));
+		const zEnd = center.add(new Vector3(0, 0, length));
+
+		this.drawLine(center, xEnd, "red"); // X axis
+		this.drawLine(center, yEnd, "green"); // Y axis
+		this.drawLine(center, zEnd, "blue"); // Z axis
 	}
 
 	drawTriangle(triangle) {
@@ -159,5 +172,7 @@ class Renderer {
 
 	renderScene(meshes) {
 		meshes.forEach((mesh) => this.drawMesh(mesh));
+
+		this.drawAxis(new Vector3(0, 0, 0), 100);
 	}
 }

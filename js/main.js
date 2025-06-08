@@ -50,19 +50,18 @@ function handleInput(camera, deltaTime) {
 	if (keys["r"]) camera.moveUp(moveSpeed);
 	if (keys["f"]) camera.moveUp(-moveSpeed);
 
-	// Rotation
-	if (keys["arrowleft"]) camera.rotateYaw(rotateSpeed);
-	if (keys["arrowright"]) camera.rotateYaw(-rotateSpeed);
-	if (keys["arrowup"]) camera.rotatePitch(rotateSpeed);
-	if (keys["arrowdown"]) camera.rotatePitch(-rotateSpeed);
-	if (keys["q"]) camera.rotateRoll(-rotateSpeed);
-	if (keys["e"]) camera.rotateRoll(rotateSpeed);
+	if (keys["arrowleft"]) camera.applyRotation(+rotateSpeed, 0, 0);
+	if (keys["arrowright"]) camera.applyRotation(-rotateSpeed, 0, 0);
+	if (keys["arrowup"]) camera.applyRotation(0, -rotateSpeed, 0);
+	if (keys["arrowdown"]) camera.applyRotation(0, +rotateSpeed, 0);
+	if (keys["q"]) camera.applyRotation(0, 0, +rotateSpeed);
+	if (keys["e"]) camera.applyRotation(0, 0, -rotateSpeed);
 }
 
 // -------------------------------------------------------------------
 // Main body
 
-const mesh1 = MeshFactory.generateCube(35, new Vector3(0, 0, 50));
+const mesh1 = MeshFactory.generateCube(35, new Vector3(30, 30, 30));
 
 let angle = 0;
 render();
