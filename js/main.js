@@ -59,12 +59,23 @@ function handleInput(camera, deltaTime) {
 }
 
 // -------------------------------------------------------------------
+// Mesh Loading
+
+let loadedMesh = null;
+
+fetch("./models/airboat.obj")
+	.then((res) => res.text())
+	.then((objText) => {
+		loadedMesh = MeshParser.fromOBJ(objText, "red");
+		render();
+	});
+
+// -------------------------------------------------------------------
 // Main body
 
 const mesh1 = MeshFactory.generateCube(35, new Vector3(30, 30, 30));
 
 let angle = 0;
-render();
 
 function render() {
 	updateScene();
@@ -80,13 +91,7 @@ function updateScene() {
 
 function drawScene() {
 	renderer.clear();
-
-	const center = mesh1.getCenter();
-
-	const rotatedMesh1 = mesh1
-		.rotateX(angle * renderer.settings["rotateX"], center)
-		.rotateY(angle * renderer.settings["rotateY"], center)
-		.rotateZ(angle * renderer.settings["rotateZ"], center);
-
-	renderer.renderScene([rotatedMesh1]);
+	if (loadedMesh) {
+		renderer.renderScene([loadedMesh]);
+	}
 }

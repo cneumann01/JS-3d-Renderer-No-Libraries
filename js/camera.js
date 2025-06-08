@@ -13,7 +13,6 @@ class Camera {
 		const right = this.getRightVector();
 		const up = this.getUpVector();
 
-		console.log(this.position, this.yaw, this.pitch, this.roll);
 		return new Vector3(
 			relative.dot(right),
 			relative.dot(up),
