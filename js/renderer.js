@@ -40,9 +40,12 @@ class Renderer {
 
 		if (z <= 0) return null;
 
-		const f = this.settings["focalLength"];
-		const aspect = this.width / this.height;
-		const screenX = ((f * x) / z) * aspect + this.width / 2;
+		// Focal Length Calculation
+		const fovDegrees = this.settings["focalLength"];
+		const fovRadians = (fovDegrees * Math.PI) / 180;
+		const f = this.height / 2 / Math.tan(fovRadians / 2);
+
+		const screenX = (f * x) / z + this.width / 2;
 		const screenY = -(f * y) / z + this.height / 2;
 
 		return new Vector3(screenX, screenY, z);
@@ -115,13 +118,28 @@ class Renderer {
 	}
 
 	drawTriangle(triangle) {
-		const normal = triangle.getFaceNormal();
-		// if (normal.z >= 0) return; // Backface culling
+		// Transform to camera space
+		const camV1 = this.camera.transform(triangle.v1);
+		const camV2 = this.camera.transform(triangle.v2);
+		const camV3 = this.camera.transform(triangle.v3);
 
+		const edge1 = camV2.subtract(camV1);
+		const edge2 = camV3.subtract(camV1);
+		const normal = edge1.cross(edge2).normalize();
+
+		const center = camV1
+			.add(camV2)
+			.add(camV3)
+			.scale(1 / 3);
+		const toCamera = center.scale(-1).normalize();
+
+		// Robust backface culling
+		if (normal.dot(toCamera) <= 0) return;
+
+		// Continue with projection
 		const v1 = this.project(triangle.v1);
 		const v2 = this.project(triangle.v2);
 		const v3 = this.project(triangle.v3);
-
 		if (!v1 || !v2 || !v3) return;
 
 		const color = triangle.color || Utils.getRandomColor();

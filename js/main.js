@@ -2,7 +2,7 @@
 const canvas = document.getElementById("myCanvas");
 renderer = new Renderer(canvas);
 
-const camera = new Camera(new Vector3(0, 0, -25), 0, 0, 0);
+const camera = new Camera(new Vector3(5, 60, -90), -0.2, 0, 0);
 renderer.setCamera(camera);
 
 function resizeCanvas() {
@@ -81,10 +81,12 @@ function updateScene() {
 function drawScene() {
 	renderer.clear();
 
+	const center = mesh1.getCenter();
+
 	const rotatedMesh1 = mesh1
-		.rotateX(angle * renderer.settings["rotateX"])
-		.rotateY(angle * renderer.settings["rotateY"])
-		.rotateZ(angle * renderer.settings["rotateZ"]);
+		.rotateX(angle * renderer.settings["rotateX"], center)
+		.rotateY(angle * renderer.settings["rotateY"], center)
+		.rotateZ(angle * renderer.settings["rotateZ"], center);
 
 	renderer.renderScene([rotatedMesh1]);
 }
